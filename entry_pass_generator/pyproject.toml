@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "entry_pass_generator"
+version = "0.1.0"
+description = "Automates creation of entry pass service notes"
+authors = ["Auto Generated"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-dotenv = "*"
+jinja2 = "*"
+weasyprint = "62.*"
+pydantic = "*"
+fastapi = "*"
+uvicorn = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
