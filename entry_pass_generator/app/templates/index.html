@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>PDF Generator</title>
+</head>
+<body>
+    <h1>Создание служебной записки</h1>
+    <form action="/generate" method="post">
+        <label>ФИО:<br><input type="text" name="full_name" required></label><br>
+        <label>Номер автомобиля:<br><input type="text" name="vehicle_plate"></label><br>
+        <label>Дата начала:<br><input type="date" name="start_date" required></label><br>
+        <label>Дата окончания:<br><input type="date" name="end_date" required></label><br>
+        <label>Цель:<br><input type="text" name="purpose" required></label><br>
+        <button type="submit">Создать PDF</button>
+    </form>
+</body>
+</html>
