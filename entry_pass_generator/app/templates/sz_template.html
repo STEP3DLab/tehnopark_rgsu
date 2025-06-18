@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: DejaVu Sans, sans-serif; margin: 2em; }
+        header { text-align: center; margin-bottom: 2em; }
+        footer { margin-top: 3em; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Служебная записка</h1>
+    <p>на въезд на территорию</p>
+</header>
+<p>Прошу оформить пропуск для {{ full_name }}<br>
+{% if vehicle_plate %}Номер автомобиля: {{ vehicle_plate }}<br>{% endif %}
+Срок действия: с {{ start_date }} по {{ end_date }}.<br>
+Цель въезда: {{ purpose }}.
+</p>
+<footer>
+    <p style="text-align:right;">___________/И.О.Ф./</p>
+</footer>
+</body>
+</html>
