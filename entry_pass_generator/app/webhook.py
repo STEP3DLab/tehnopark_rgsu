@@ -12,6 +12,7 @@ app = FastAPI()
 
 TEMPLATE_DIR = Path(__file__).parent / "templates"
 INDEX_HTML = TEMPLATE_DIR / "index.html"
+START_HTML = TEMPLATE_DIR / "start.html"
 
 @app.post("/webhook")
 def webhook(data: dict):
@@ -29,6 +30,12 @@ def webhook(data: dict):
 def index():
     """Serve simple HTML form for data input."""
     return FileResponse(INDEX_HTML)
+
+
+@app.get("/start", response_class=HTMLResponse)
+def start_page():
+    """Landing page with start button and simple 3D animation."""
+    return FileResponse(START_HTML)
 
 
 @app.post("/generate")
