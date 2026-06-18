@@ -1,91 +1,137 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Интерактивный образовательный сайт о робототехнике при ликвидации аварии на Чернобыльской АЭС: СКТБ ПР, МОБОТ, СТР-1, Клин, Joker и инженерные уроки." />
-  <meta name="theme-color" content="#0b0f1f" />
+  <meta name="description" content="Современный интерактивный образовательный сайт о робототехнике Чернобыля: СКТБ ПР, МОБОТ, СТР-1, Клин, Joker, инженерные уроки, симулятор и квиз." />
+  <meta name="theme-color" content="#090d18" />
   <title>Роботы Чернобыля - интерактивный инженерный кейс</title>
 
   <style>
-    /* 
-      Весь сайт сделан одним файлом, чтобы его было просто выложить на GitHub Pages.
-      Ниже - CSS: цвета, сетки, карточки, адаптация под телефон и интерактивные состояния.
+    /*
+      UX/UI версия 2.
+      Сайт остается одним HTML-файлом: его проще редактировать и публиковать на GitHub Pages.
+      Внутри есть CSS, SVG-графика и JavaScript без внешних библиотек.
     */
+
     :root {
       --bg: #080b12;
-      --bg-2: #0f1626;
-      --panel: rgba(255, 255, 255, 0.075);
-      --panel-strong: rgba(255, 255, 255, 0.12);
-      --line: rgba(255, 255, 255, 0.16);
-      --text: #f3f7ff;
-      --muted: #a8b3c7;
+      --bg-soft: #0d1323;
+      --surface: rgba(255, 255, 255, .075);
+      --surface-2: rgba(255, 255, 255, .115);
+      --surface-3: rgba(255, 255, 255, .16);
+      --text: #f6f8ff;
+      --muted: #aeb9ce;
+      --line: rgba(255, 255, 255, .16);
+      --line-strong: rgba(255, 255, 255, .28);
       --accent: #ffd166;
       --accent-2: #38e6c5;
+      --accent-3: #77a7ff;
       --danger: #ff5f6d;
-      --good: #98f576;
-      --blue: #72a7ff;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-      --radius-xl: 28px;
-      --radius-lg: 20px;
-      --radius-md: 14px;
+      --ok: #98f576;
+      --shadow: 0 30px 100px rgba(0, 0, 0, .36);
+      --radius-xl: 34px;
+      --radius-lg: 24px;
+      --radius-md: 16px;
       --max: 1180px;
+    }
+
+    html[data-theme="light"] {
+      --bg: #f4f7fb;
+      --bg-soft: #ffffff;
+      --surface: rgba(7, 14, 28, .055);
+      --surface-2: rgba(7, 14, 28, .085);
+      --surface-3: rgba(7, 14, 28, .13);
+      --text: #081120;
+      --muted: #566176;
+      --line: rgba(7, 14, 28, .13);
+      --line-strong: rgba(7, 14, 28, .22);
+      --shadow: 0 26px 80px rgba(38, 54, 84, .16);
     }
 
     * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 15% 15%, rgba(56, 230, 197, 0.16), transparent 28%),
-        radial-gradient(circle at 85% 5%, rgba(255, 209, 102, 0.18), transparent 24%),
-        radial-gradient(circle at 50% 100%, rgba(114, 167, 255, 0.16), transparent 34%),
-        linear-gradient(135deg, #070a12 0%, #0c1220 42%, #121624 100%);
-      color: var(--text);
       min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(56, 230, 197, .18), transparent 28%),
+        radial-gradient(circle at 88% 5%, rgba(255, 209, 102, .20), transparent 26%),
+        radial-gradient(circle at 45% 100%, rgba(119, 167, 255, .18), transparent 33%),
+        linear-gradient(135deg, var(--bg) 0%, var(--bg-soft) 100%);
       overflow-x: hidden;
     }
 
     body::before {
-      /* Лёгкая "техническая" сетка на фоне */
+      /* Тонкая инженерная сетка на фоне. */
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+      background-size: 44px 44px;
+      opacity: .65;
+      mask-image: linear-gradient(to bottom, #000 0%, transparent 88%);
       z-index: -2;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
+    html[data-theme="light"] body::before {
+      background-image:
+        linear-gradient(rgba(8, 17, 32, .045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(8, 17, 32, .045) 1px, transparent 1px);
     }
+
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .skip-link {
+      position: fixed;
+      left: 16px;
+      top: -60px;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #071018;
+      font-weight: 900;
+      z-index: 200;
+      transition: top .2s ease;
+    }
+
+    .skip-link:focus { top: 16px; }
 
     .shell {
       width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
     }
 
+    .progress-bar {
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 0%;
+      height: 3px;
+      z-index: 120;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--accent-3));
+      box-shadow: 0 0 22px rgba(56, 230, 197, .45);
+    }
+
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 50;
-      backdrop-filter: blur(18px);
-      background: rgba(8, 11, 18, 0.72);
+      z-index: 80;
       border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 78%, transparent);
+      backdrop-filter: blur(20px);
     }
 
     .nav {
-      min-height: 70px;
+      min-height: 74px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -96,54 +142,78 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      font-weight: 800;
-      letter-spacing: .02em;
+      font-weight: 950;
+      letter-spacing: -.02em;
+      white-space: nowrap;
     }
 
     .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
       display: grid;
       place-items: center;
-      background: linear-gradient(135deg, rgba(255, 209, 102, .95), rgba(56, 230, 197, .85));
-      color: #0b0f1f;
-      box-shadow: 0 12px 30px rgba(56, 230, 197, .22);
+      border-radius: 16px;
+      color: #071018;
+      background: conic-gradient(from 210deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent));
+      box-shadow: 0 18px 42px rgba(56, 230, 197, .25);
     }
 
     .nav-links {
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       gap: 8px;
       flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
-    .nav-links a, .pill {
-      padding: 10px 14px;
+    .nav-link, .icon-btn, .small-btn {
       border: 1px solid transparent;
       border-radius: 999px;
+      background: transparent;
       color: var(--muted);
-      transition: .25s ease;
-      font-size: 14px;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease, color .18s ease;
     }
 
-    .nav-links a:hover, .pill:hover {
-      color: var(--text);
-      border-color: var(--line);
-      background: var(--panel);
-      transform: translateY(-1px);
+    .nav-link {
+      padding: 10px 13px;
+      font-size: 14px;
+      font-weight: 750;
     }
+
+    .nav-link:hover, .nav-link.active, .icon-btn:hover, .small-btn:hover {
+      transform: translateY(-1px);
+      color: var(--text);
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-btn {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    .mobile-toggle { display: none; }
 
     .hero {
-      padding: 72px 0 44px;
-      position: relative;
+      padding: 70px 0 46px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 36px;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 34px;
       align-items: center;
     }
 
@@ -151,223 +221,266 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 12px;
-      border: 1px solid rgba(255, 209, 102, .35);
-      background: rgba(255, 209, 102, .08);
-      color: var(--accent);
+      padding: 9px 13px;
       border-radius: 999px;
-      font-weight: 700;
+      border: 1px solid rgba(255, 209, 102, .38);
+      background: rgba(255, 209, 102, .10);
+      color: var(--accent);
       font-size: 13px;
-      letter-spacing: .06em;
+      font-weight: 900;
       text-transform: uppercase;
+      letter-spacing: .08em;
     }
 
     h1 {
-      margin: 22px 0 18px;
-      font-size: clamp(42px, 7vw, 92px);
-      line-height: .9;
-      letter-spacing: -0.06em;
-      max-width: 820px;
+      margin: 22px 0 20px;
+      max-width: 870px;
+      font-size: clamp(42px, 7.2vw, 96px);
+      line-height: .88;
+      letter-spacing: -.07em;
     }
 
-    h1 span {
-      display: block;
+    .gradient-text {
       color: transparent;
-      background: linear-gradient(110deg, #fff, #ffd166 42%, #38e6c5);
+      background: linear-gradient(110deg, var(--text), var(--accent) 42%, var(--accent-2));
       background-clip: text;
       -webkit-background-clip: text;
     }
 
     .lead {
-      font-size: clamp(18px, 2vw, 22px);
-      line-height: 1.6;
-      color: var(--muted);
       max-width: 760px;
-      margin: 0 0 26px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 22px);
+      line-height: 1.62;
     }
 
-    .hero-actions {
+    .hero-actions, .hero-tools {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 28px;
+      margin-top: 26px;
     }
 
     .btn {
-      border: 0;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      min-height: 48px;
+      min-height: 50px;
       padding: 0 20px;
+      border: 0;
       border-radius: 999px;
-      font-weight: 800;
+      cursor: pointer;
       color: #071018;
+      font-weight: 950;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 18px 50px rgba(56, 230, 197, .18);
-      transition: transform .2s ease, filter .2s ease;
+      box-shadow: 0 18px 46px rgba(56, 230, 197, .2);
+      transition: transform .18s ease, filter .18s ease;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.05);
-    }
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
 
     .btn.ghost {
       color: var(--text);
-      background: var(--panel);
+      background: var(--surface);
       border: 1px solid var(--line);
       box-shadow: none;
     }
 
+    .small-btn {
+      padding: 9px 12px;
+      background: var(--surface);
+      border-color: var(--line);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
     .hero-card {
+      min-height: 560px;
       position: relative;
-      min-height: 540px;
+      overflow: hidden;
+      border: 1px solid var(--line);
       border-radius: var(--radius-xl);
       background:
-        linear-gradient(145deg, rgba(255, 255, 255, .12), rgba(255, 255, 255, .04)),
-        radial-gradient(circle at 50% 20%, rgba(255, 209, 102, .20), transparent 35%);
-      border: 1px solid var(--line);
+        radial-gradient(circle at 50% 22%, rgba(255, 209, 102, .22), transparent 30%),
+        linear-gradient(145deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .045));
       box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: 24px;
     }
 
-    .reactor-core {
+    .hero-card::before {
+      content: "";
       position: absolute;
-      inset: 24px;
-      border-radius: 24px;
+      inset: 22px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 45%, rgba(255, 95, 109, .24), transparent 18%),
-        radial-gradient(circle at 50% 45%, rgba(255, 209, 102, .16), transparent 31%),
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-      border: 1px solid rgba(255,255,255,.12);
+        radial-gradient(circle at 50% 44%, rgba(255, 95, 109, .23), transparent 18%),
+        radial-gradient(circle at 50% 44%, rgba(255, 209, 102, .16), transparent 34%),
+        rgba(0, 0, 0, .08);
     }
 
-    .robot-stage {
+    .scanner {
       position: absolute;
-      left: 8%;
-      right: 8%;
-      bottom: 38px;
-      height: 260px;
-      border-radius: 26px;
-      background:
-        linear-gradient(transparent 0 58%, rgba(255,255,255,.07) 58% 100%),
-        radial-gradient(circle at 50% 100%, rgba(56, 230, 197, .18), transparent 50%);
-      border: 1px solid rgba(255,255,255,.10);
+      left: 7%;
+      right: 7%;
+      bottom: 34px;
+      height: 275px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
       overflow: hidden;
+      background:
+        linear-gradient(transparent 0 58%, rgba(255, 255, 255, .07) 58% 100%),
+        radial-gradient(circle at 50% 100%, rgba(56, 230, 197, .18), transparent 54%);
     }
 
     .scanner-line {
       position: absolute;
       left: 0;
       right: 0;
-      top: 35%;
+      top: 40%;
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--accent-2), transparent);
       animation: scan 4s ease-in-out infinite;
-      opacity: .75;
     }
 
     @keyframes scan {
-      0%, 100% { transform: translateY(-70px); opacity: .15; }
-      50% { transform: translateY(78px); opacity: .9; }
+      0%, 100% { transform: translateY(-80px); opacity: .15; }
+      50% { transform: translateY(82px); opacity: .95; }
     }
 
     .robot-svg {
       position: absolute;
       left: 50%;
-      bottom: 30px;
-      width: min(88%, 520px);
+      bottom: 26px;
+      width: min(92%, 550px);
       transform: translateX(-50%);
-      filter: drop-shadow(0 28px 28px rgba(0,0,0,.42));
+      filter: drop-shadow(0 30px 28px rgba(0,0,0,.38));
     }
 
-    .radiation-chip {
+    .hud {
       position: absolute;
-      top: 24px;
-      right: 24px;
+      z-index: 2;
       display: grid;
-      gap: 6px;
-      padding: 14px;
-      width: 188px;
-      border-radius: 18px;
-      background: rgba(0,0,0,.26);
-      border: 1px solid rgba(255,255,255,.14);
+      gap: 8px;
+      width: 210px;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(0, 0, 0, .24);
+      backdrop-filter: blur(10px);
     }
 
-    .chip-value {
-      font-size: 30px;
-      line-height: 1;
+    .hud.top-right { right: 24px; top: 24px; }
+    .hud.bottom-left { left: 24px; bottom: 24px; width: 230px; }
+
+    html[data-theme="light"] .hud { background: rgba(255,255,255,.60); }
+
+    .hud-kicker {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .08em;
       font-weight: 900;
+    }
+
+    .hud-value {
+      font-size: 34px;
+      line-height: .95;
+      font-weight: 950;
       color: var(--accent);
     }
 
-    .chip-note {
+    .hud-text {
+      margin: 0;
       color: var(--muted);
       font-size: 13px;
-      line-height: 1.35;
+      line-height: 1.38;
+    }
+
+    .quick-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+      box-shadow: 0 18px 50px rgba(0,0,0,.12);
+    }
+
+    .stat b {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 28px;
+      line-height: 1;
+      color: var(--accent-2);
+    }
+
+    .stat span {
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 14px;
     }
 
     .section {
-      padding: 58px 0;
-      position: relative;
+      padding: 62px 0;
+      scroll-margin-top: 96px;
     }
 
     .section-head {
       display: flex;
-      align-items: end;
       justify-content: space-between;
-      gap: 24px;
+      align-items: end;
+      gap: 28px;
       margin-bottom: 26px;
     }
 
     .section-title {
       margin: 0;
-      font-size: clamp(30px, 4vw, 54px);
-      letter-spacing: -0.045em;
+      font-size: clamp(31px, 4vw, 56px);
       line-height: 1;
+      letter-spacing: -.055em;
     }
 
     .section-text {
+      max-width: 650px;
       margin: 0;
-      max-width: 640px;
       color: var(--muted);
-      line-height: 1.65;
       font-size: 16px;
+      line-height: 1.68;
     }
 
-    .grid-3 {
+    .grid-2, .grid-3, .grid-4 {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
     }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
+    .grid-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-3 { grid-template-columns: repeat(3, 1fr); }
+    .grid-4 { grid-template-columns: repeat(4, 1fr); }
 
     .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 18px 50px rgba(0,0,0,.18);
-      padding: 22px;
       position: relative;
       overflow: hidden;
+      padding: 23px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      box-shadow: 0 20px 58px rgba(0,0,0,.14);
     }
 
     .card::after {
       content: "";
       position: absolute;
-      width: 160px;
-      height: 160px;
-      right: -90px;
-      top: -90px;
+      right: -80px;
+      top: -80px;
+      width: 170px;
+      height: 170px;
       border-radius: 50%;
       background: rgba(255, 209, 102, .08);
       pointer-events: none;
@@ -376,24 +489,62 @@
     .card h3 {
       margin: 0 0 10px;
       font-size: 22px;
-      letter-spacing: -0.02em;
+      letter-spacing: -.025em;
     }
 
-    .card p {
-      margin: 0;
+    .card p, .card li {
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.65;
     }
+
+    .card p { margin: 0; }
 
     .metric {
+      margin-bottom: 12px;
       font-size: 42px;
       line-height: 1;
       font-weight: 950;
       color: transparent;
-      background: linear-gradient(135deg, #fff, var(--accent-2));
+      background: linear-gradient(135deg, var(--text), var(--accent-2));
       background-clip: text;
       -webkit-background-clip: text;
-      margin-bottom: 12px;
+    }
+
+    .lesson-path {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .path-step {
+      position: relative;
+      min-height: 160px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .path-step:hover, .path-step.active {
+      transform: translateY(-4px);
+      border-color: rgba(56, 230, 197, .55);
+      background: linear-gradient(145deg, rgba(56, 230, 197, .12), var(--surface));
+    }
+
+    .path-step strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .path-step span {
+      display: block;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     .timeline {
@@ -403,37 +554,51 @@
 
     .time-item {
       display: grid;
-      grid-template-columns: 130px 1fr;
+      grid-template-columns: 134px 1fr 44px;
+      align-items: center;
       gap: 18px;
       padding: 18px;
-      border-radius: var(--radius-lg);
-      background: rgba(255,255,255,.055);
       border: 1px solid var(--line);
-      transition: .25s ease;
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
     }
 
-    .time-item:hover {
+    .time-item:hover, .time-item.open {
       transform: translateX(4px);
-      background: rgba(255,255,255,.085);
+      background: var(--surface-2);
+      border-color: rgba(255, 209, 102, .42);
     }
 
     .time-date {
-      font-weight: 900;
       color: var(--accent);
+      font-weight: 950;
       letter-spacing: .02em;
     }
 
-    .time-item strong {
+    .time-title {
       display: block;
       margin-bottom: 6px;
       font-size: 18px;
+      font-weight: 900;
     }
 
-    .time-item p {
+    .time-short, .time-more {
       margin: 0;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.58;
     }
+
+    .time-more {
+      display: none;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .time-item.open .time-more { display: block; }
+    .time-arrow { color: var(--muted); font-size: 24px; text-align: center; }
 
     .tabs {
       display: flex;
@@ -446,35 +611,37 @@
       padding: 10px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,.055);
+      background: var(--surface);
       color: var(--muted);
       cursor: pointer;
-      transition: .2s ease;
-      font-weight: 700;
+      font-weight: 850;
+      transition: .18s ease;
     }
+
+    .tab:hover { transform: translateY(-1px); color: var(--text); }
 
     .tab.active {
       color: #071018;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
       border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
     }
 
     .robot-panel {
       display: grid;
-      grid-template-columns: .9fr 1.1fr;
+      grid-template-columns: .88fr 1.12fr;
       gap: 16px;
       align-items: stretch;
     }
 
     .robot-visual {
-      min-height: 360px;
+      min-height: 380px;
       display: grid;
       place-items: center;
+      border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       background:
-        radial-gradient(circle at center, rgba(56, 230, 197, .16), transparent 40%),
-        rgba(255,255,255,.055);
-      border: 1px solid var(--line);
+        radial-gradient(circle at center, rgba(56, 230, 197, .16), transparent 42%),
+        var(--surface);
       padding: 20px;
     }
 
@@ -486,88 +653,112 @@
     .data-row {
       display: flex;
       justify-content: space-between;
-      gap: 14px;
+      gap: 16px;
       padding: 14px 16px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.055);
-      border: 1px solid rgba(255,255,255,.10);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .045);
     }
 
-    .data-row span {
+    .data-row span { color: var(--muted); }
+    .data-row b { text-align: right; }
+
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .compare-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .compare-item {
+      padding: 13px 14px;
+      border-radius: 15px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid var(--line);
       color: var(--muted);
-    }
-
-    .data-row b {
-      text-align: right;
+      line-height: 1.5;
     }
 
     .lesson {
       display: grid;
-      gap: 16px;
-      padding: 22px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(145deg, rgba(56, 230, 197, .10), rgba(255, 209, 102, .06));
+      gap: 14px;
+      padding: 23px;
       border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, rgba(56, 230, 197, .11), rgba(255, 209, 102, .06));
     }
 
-    .lesson h3 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .lesson ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-      line-height: 1.75;
-    }
+    .lesson h3 { margin: 0; font-size: 24px; }
+    .lesson ul { margin: 0; padding-left: 20px; }
 
     .simulator {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       align-items: stretch;
+      margin-top: 16px;
     }
 
     .range-panel {
       padding: 24px;
-      border-radius: var(--radius-lg);
-      background: rgba(255,255,255,.065);
       border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
     }
 
     .range-panel label {
-      display: block;
-      margin-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 22px 0 12px;
       color: var(--muted);
     }
 
-    input[type="range"] {
-      width: 100%;
-      accent-color: var(--accent);
-    }
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
 
     .dose-readout {
+      min-height: 290px;
       display: grid;
-      gap: 12px;
       place-items: center;
       text-align: center;
-      min-height: 260px;
+      padding: 28px;
+      border: 1px solid var(--line);
       border-radius: var(--radius-lg);
       background:
-        radial-gradient(circle, rgba(255, 95, 109, var(--glow, .15)), transparent 54%),
-        rgba(255,255,255,.055);
-      border: 1px solid var(--line);
-      padding: 28px;
+        radial-gradient(circle, rgba(255, 95, 109, var(--glow, .13)), transparent 55%),
+        var(--surface);
       transition: background .2s ease;
     }
 
     .dose-big {
-      font-size: clamp(42px, 8vw, 88px);
-      font-weight: 950;
+      font-size: clamp(46px, 8vw, 92px);
       line-height: .9;
+      font-weight: 950;
       color: var(--accent);
-      letter-spacing: -.05em;
+      letter-spacing: -.06em;
+    }
+
+    .bars {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      height: 78px;
+      margin-top: 18px;
+    }
+
+    .bar {
+      flex: 1;
+      border-radius: 999px 999px 8px 8px;
+      background: linear-gradient(180deg, var(--accent), var(--danger));
+      opacity: .45;
+      transform-origin: bottom;
+      transition: height .2s ease, opacity .2s ease;
     }
 
     .quiz {
@@ -575,11 +766,37 @@
       gap: 16px;
     }
 
+    .quiz-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .quiz-progress {
+      min-width: min(360px, 100%);
+      height: 11px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+    }
+
+    .quiz-progress span {
+      display: block;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width .2s ease;
+    }
+
     .question {
       padding: 22px;
-      border-radius: var(--radius-lg);
-      background: rgba(255,255,255,.065);
       border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      background: var(--surface);
     }
 
     .answers {
@@ -589,641 +806,690 @@
     }
 
     .answer {
+      width: 100%;
       text-align: left;
       padding: 13px 15px;
-      border-radius: 14px;
       border: 1px solid var(--line);
+      border-radius: 15px;
       background: rgba(255,255,255,.045);
       color: var(--text);
       cursor: pointer;
-      transition: .2s ease;
-      font: inherit;
+      transition: .18s ease;
     }
 
-    .answer:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.085);
-    }
-
-    .answer.correct {
-      border-color: rgba(152, 245, 118, .75);
-      background: rgba(152, 245, 118, .12);
-    }
-
-    .answer.wrong {
-      border-color: rgba(255, 95, 109, .75);
-      background: rgba(255, 95, 109, .12);
-    }
+    .answer:hover { transform: translateY(-1px); background: var(--surface-2); }
+    .answer.correct { border-color: rgba(152,245,118,.75); background: rgba(152,245,118,.13); }
+    .answer.wrong { border-color: rgba(255,95,109,.75); background: rgba(255,95,109,.13); }
 
     .result {
-      min-height: 28px;
+      min-height: 30px;
       color: var(--accent-2);
-      font-weight: 800;
+      font-weight: 900;
     }
 
-    .source-list {
-      display: grid;
-      gap: 12px;
+    details {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      overflow: hidden;
     }
+
+    summary {
+      padding: 17px 18px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    details p {
+      margin: 0;
+      padding: 0 18px 18px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .source-list { display: grid; gap: 12px; }
 
     .source {
       display: flex;
-      gap: 12px;
+      gap: 13px;
       align-items: flex-start;
       padding: 16px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.055);
       border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--surface);
+      transition: transform .18s ease, border-color .18s ease;
     }
 
-    .source code {
-      color: var(--accent);
-      white-space: nowrap;
-    }
+    .source:hover { transform: translateY(-2px); border-color: rgba(56,230,197,.48); }
+    .source code { color: var(--accent); white-space: nowrap; font-weight: 900; }
+    .source span { color: var(--muted); line-height: 1.5; }
 
     .footer {
+      margin-top: 34px;
       padding: 44px 0;
-      color: var(--muted);
       border-top: 1px solid var(--line);
-      margin-top: 30px;
+      color: var(--muted);
     }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 150;
+      max-width: 360px;
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: color-mix(in srgb, var(--bg-soft) 88%, transparent);
+      box-shadow: var(--shadow);
+      color: var(--text);
+      transform: translateY(24px);
+      opacity: 0;
+      pointer-events: none;
+      transition: .22s ease;
+    }
+
+    .toast.show { transform: none; opacity: 1; }
+
+    .search-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: none;
+      place-items: start center;
+      padding: 96px 18px 18px;
+      background: rgba(0,0,0,.56);
+      backdrop-filter: blur(8px);
+    }
+
+    .search-modal.open { display: grid; }
+
+    .search-box {
+      width: min(720px, 100%);
+      border: 1px solid var(--line-strong);
+      border-radius: 26px;
+      background: color-mix(in srgb, var(--bg-soft) 94%, transparent);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 20px 22px;
+      border: 0;
+      outline: 0;
+      color: var(--text);
+      background: transparent;
+      font-size: 20px;
+    }
+
+    .search-results { display: grid; gap: 8px; padding: 0 12px 12px; }
+
+    .search-result {
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--surface);
+      cursor: pointer;
+    }
+
+    .search-result b { display: block; margin-bottom: 4px; }
+    .search-result span { color: var(--muted); font-size: 14px; }
+
+    .floating-top {
+      position: fixed;
+      right: 18px;
+      bottom: 86px;
+      z-index: 70;
+      opacity: 0;
+      pointer-events: none;
+      transition: .2s ease;
+    }
+
+    .floating-top.show { opacity: 1; pointer-events: auto; }
 
     .reveal {
       opacity: 0;
-      transform: translateY(16px);
-      transition: .7s ease;
+      transform: translateY(18px);
+      transition: opacity .65s ease, transform .65s ease;
     }
 
-    .reveal.visible {
-      opacity: 1;
-      transform: none;
+    .reveal.visible { opacity: 1; transform: none; }
+
+    .lesson-mode .section:not(#case):not(#robots):not(#engineering):not(#quiz) {
+      display: none;
     }
 
-    @media (max-width: 920px) {
-      .hero-grid, .robot-panel, .simulator, .grid-2, .grid-3 {
+    @media (max-width: 980px) {
+      .hero-grid, .robot-panel, .simulator, .grid-2, .grid-3, .grid-4, .quick-stats, .compare-box {
         grid-template-columns: 1fr;
       }
 
-      .hero-card {
-        min-height: 470px;
-      }
+      .lesson-path { grid-template-columns: 1fr 1fr; }
+      .hero-card { min-height: 500px; }
+    }
 
-      .section-head {
-        display: grid;
-      }
-
-      .nav {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 14px 0;
-      }
+    @media (max-width: 820px) {
+      .mobile-toggle { display: grid; }
 
       .nav-links {
-        justify-content: flex-start;
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        top: 84px;
+        display: none;
+        padding: 14px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: color-mix(in srgb, var(--bg-soft) 94%, transparent);
+        box-shadow: var(--shadow);
       }
+
+      .nav-links.open { display: grid; }
+      .nav-link { text-align: left; }
+      .section-head { display: grid; }
+      .time-item { grid-template-columns: 1fr 44px; }
+      .time-date { grid-column: 1 / -1; }
+      .hud.bottom-left { display: none; }
     }
 
-    @media (max-width: 600px) {
-      .time-item {
-        grid-template-columns: 1fr;
-      }
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 22px, var(--max)); }
+      .hero { padding-top: 42px; }
+      .hero-card { min-height: 455px; border-radius: 24px; }
+      .hud.top-right { left: 18px; right: auto; top: 18px; width: 196px; }
+      .scanner { left: 4%; right: 4%; height: 245px; }
+      .lesson-path { grid-template-columns: 1fr; }
+      .data-row { display: grid; }
+      .data-row b { text-align: left; }
+    }
 
-      .radiation-chip {
-        left: 20px;
-        right: auto;
-      }
-
-      .hero {
-        padding-top: 38px;
-      }
+    @media (prefers-reduced-motion: reduce) {
+      * { scroll-behavior: auto !important; animation: none !important; transition: none !important; }
+      .reveal { opacity: 1; transform: none; }
     }
   </style>
 </head>
 
 <body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+
   <header class="topbar">
-    <nav class="nav shell">
+    <nav class="nav shell" aria-label="Главная навигация">
       <a class="brand" href="#top" aria-label="В начало сайта">
         <span class="brand-mark">☢</span>
         <span>Роботы Чернобыля</span>
       </a>
-      <div class="nav-links" aria-label="Навигация">
-        <a href="#case">Кейс</a>
-        <a href="#timeline">Хронология</a>
-        <a href="#robots">Роботы</a>
-        <a href="#engineering">Инженерия</a>
-        <a href="#quiz">Квиз</a>
-        <a href="#sources">Источники</a>
+
+      <div class="nav-links" id="navLinks">
+        <a class="nav-link" href="#case">Кейс</a>
+        <a class="nav-link" href="#timeline">Хронология</a>
+        <a class="nav-link" href="#robots">Роботы</a>
+        <a class="nav-link" href="#engineering">Инженерия</a>
+        <a class="nav-link" href="#quiz">Квиз</a>
+        <a class="nav-link" href="#sources">Источники</a>
+      </div>
+
+      <div class="nav-actions">
+        <button class="icon-btn" id="searchBtn" type="button" aria-label="Поиск по сайту">⌕</button>
+        <button class="icon-btn" id="themeBtn" type="button" aria-label="Сменить тему">◐</button>
+        <button class="icon-btn mobile-toggle" id="menuBtn" type="button" aria-label="Открыть меню">☰</button>
       </div>
     </nav>
   </header>
 
-  <main id="top">
-    <section class="hero shell">
+  <main id="main">
+    <section id="top" class="hero shell">
       <div class="hero-grid">
         <div class="reveal">
-          <div class="eyebrow">Образовательный инженерный кейс</div>
-          <h1>Когда робот идёт туда, <span>куда человек не должен</span></h1>
+          <div class="eyebrow">Интерактивный инженерный кейс</div>
+          <h1>Когда робот идёт туда, <span class="gradient-text">куда человек не должен</span></h1>
           <p class="lead">
-            Интерактивный сайт о робототехнике при ликвидации аварии на Чернобыльской АЭС:
-            как инженеры решали задачи разведки, расчистки, связи, защиты электроники и управления
-            в зоне экстремальной радиации.
+            Современный учебный сайт о робототехнике при ликвидации аварии на Чернобыльской АЭС:
+            СКТБ ПР, МОБОТ, СТР-1, Клин, Joker, радиация, отказоустойчивость, связь, механика и инженерные решения.
           </p>
           <div class="hero-actions">
             <a class="btn" href="#robots">Изучить роботов</a>
-            <a class="btn ghost" href="#quiz">Пройти мини-квиз</a>
+            <a class="btn ghost" href="#engineering">Понять инженерию</a>
+          </div>
+          <div class="hero-tools" aria-label="Быстрые действия">
+            <button class="small-btn" id="lessonModeBtn" type="button">Режим урока</button>
+            <button class="small-btn" id="copyLinkBtn" type="button">Скопировать ссылку</button>
+            <button class="small-btn" onclick="window.print()" type="button">Печать / PDF</button>
           </div>
         </div>
 
-        <div class="hero-card reveal" aria-label="Стилизованная сцена с аварийным роботом">
-          <div class="reactor-core"></div>
-          <div class="radiation-chip">
-            <span class="chip-value" id="heroDose">2800</span>
-            <span class="chip-note">Р/ч - порядок мощности дозы на отдельных кровельных участках, где работала техника.</span>
+        <div class="hero-card reveal" aria-label="Стилизованная сцена аварийного робота">
+          <div class="hud top-right">
+            <span class="hud-kicker">Условная зона</span>
+            <span class="hud-value" id="heroDose">2800</span>
+            <p class="hud-text">Р/ч: порядок экстремальной мощности дозы на отдельных опасных участках.</p>
           </div>
-          <div class="robot-stage">
+          <div class="hud bottom-left">
+            <span class="hud-kicker">Главная идея</span>
+            <p class="hud-text">Робот в аварии - это не игрушка, а расходуемая защита человека и инструмент разведки.</p>
+          </div>
+          <div class="scanner">
             <div class="scanner-line"></div>
-
-            <!-- SVG-робот намеренно сделан условным: гусеничная платформа, низкий центр масс, отвал, камера, кабель/антенна. -->
-            <svg class="robot-svg" viewBox="0 0 780 370" role="img" aria-label="Стилизованный аварийный робот">
+            <svg class="robot-svg" viewBox="0 0 780 370" role="img" aria-label="Стилизованный аварийный робот на гусеницах">
               <defs>
-                <linearGradient id="metal" x1="0" x2="1">
-                  <stop offset="0" stop-color="#dce6f6"/>
-                  <stop offset=".55" stop-color="#8e9bb3"/>
-                  <stop offset="1" stop-color="#f8fbff"/>
-                </linearGradient>
-                <linearGradient id="track" x1="0" x2="1">
-                  <stop offset="0" stop-color="#202838"/>
-                  <stop offset="1" stop-color="#0d1321"/>
-                </linearGradient>
-                <filter id="softGlow">
-                  <feGaussianBlur stdDeviation="5" result="blur"/>
-                  <feMerge>
-                    <feMergeNode in="blur"/>
-                    <feMergeNode in="SourceGraphic"/>
-                  </feMerge>
-                </filter>
+                <linearGradient id="metal" x1="0" x2="1"><stop offset="0" stop-color="#dce6f6"/><stop offset=".55" stop-color="#8e9bb3"/><stop offset="1" stop-color="#f8fbff"/></linearGradient>
+                <linearGradient id="track" x1="0" x2="1"><stop offset="0" stop-color="#202838"/><stop offset="1" stop-color="#0d1321"/></linearGradient>
+                <filter id="softGlow"><feGaussianBlur stdDeviation="5" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
               </defs>
               <ellipse cx="390" cy="330" rx="330" ry="28" fill="rgba(0,0,0,.35)"/>
               <path d="M110 245 C135 190 645 190 675 245 L652 310 C600 335 175 335 125 310 Z" fill="url(#track)" stroke="#3b465c" stroke-width="6"/>
-              <g fill="#121a29">
-                <circle cx="185" cy="284" r="38"/><circle cx="285" cy="292" r="44"/><circle cx="390" cy="294" r="46"/>
-                <circle cx="500" cy="292" r="44"/><circle cx="600" cy="284" r="38"/>
-              </g>
-              <g fill="#5f6d84">
-                <circle cx="185" cy="284" r="18"/><circle cx="285" cy="292" r="20"/><circle cx="390" cy="294" r="22"/>
-                <circle cx="500" cy="292" r="20"/><circle cx="600" cy="284" r="18"/>
-              </g>
+              <g fill="#121a29"><circle cx="185" cy="284" r="38"/><circle cx="285" cy="292" r="44"/><circle cx="390" cy="294" r="46"/><circle cx="500" cy="292" r="44"/><circle cx="600" cy="284" r="38"/></g>
+              <g fill="#5f6d84"><circle cx="185" cy="284" r="18"/><circle cx="285" cy="292" r="20"/><circle cx="390" cy="294" r="22"/><circle cx="500" cy="292" r="20"/><circle cx="600" cy="284" r="18"/></g>
               <path d="M190 130 H565 C610 130 642 162 642 205 V245 H135 V188 C135 156 158 130 190 130Z" fill="url(#metal)" stroke="#f3f7ff" stroke-opacity=".35" stroke-width="4"/>
               <path d="M215 102 H470 C506 102 532 128 532 164 V180 H180 V137 C180 118 196 102 215 102Z" fill="#b8c2d5" stroke="#ffffff" stroke-opacity=".28" stroke-width="4"/>
               <path d="M580 180 L720 210 L720 255 L640 245 Z" fill="#b7c3d6" stroke="#fff" stroke-opacity=".28" stroke-width="5"/>
               <path d="M655 210 L742 222 L742 263 L660 250 Z" fill="#8f9bb0"/>
               <rect x="420" y="70" width="92" height="54" rx="18" fill="#dbe7f8" stroke="#fff" stroke-opacity=".32" stroke-width="4"/>
-              <circle cx="488" cy="97" r="16" fill="#132033"/>
-              <circle cx="488" cy="97" r="7" fill="#38e6c5" filter="url(#softGlow)"/>
-              <path d="M458 70 C462 20 522 22 532 63" fill="none" stroke="#ffd166" stroke-width="6" stroke-linecap="round"/>
-              <circle cx="535" cy="61" r="8" fill="#ffd166"/>
-              <g opacity=".82">
-                <path d="M244 150 H342" stroke="#0d1321" stroke-opacity=".45" stroke-width="10" stroke-linecap="round"/>
-                <path d="M244 174 H520" stroke="#0d1321" stroke-opacity=".30" stroke-width="8" stroke-linecap="round"/>
-                <path d="M220 213 H560" stroke="#0d1321" stroke-opacity=".22" stroke-width="7" stroke-linecap="round"/>
-              </g>
+              <circle cx="488" cy="97" r="16" fill="#132033"/><circle cx="488" cy="97" r="7" fill="#38e6c5" filter="url(#softGlow)"/>
+              <path d="M458 70 C462 20 522 22 532 63" fill="none" stroke="#ffd166" stroke-width="6" stroke-linecap="round"/><circle cx="535" cy="61" r="8" fill="#ffd166"/>
+              <path d="M244 150 H342" stroke="#0d1321" stroke-opacity=".45" stroke-width="10" stroke-linecap="round"/>
+              <path d="M244 174 H520" stroke="#0d1321" stroke-opacity=".30" stroke-width="8" stroke-linecap="round"/>
+              <path d="M220 213 H560" stroke="#0d1321" stroke-opacity=".22" stroke-width="7" stroke-linecap="round"/>
             </svg>
           </div>
         </div>
+      </div>
+
+      <div class="quick-stats reveal" aria-label="Краткие факты">
+        <div class="stat"><b>4</b><span>ключевых типа робототехнических решений в кейсе</span></div>
+        <div class="stat"><b>5</b><span>шагов учебного маршрута для занятия</span></div>
+        <div class="stat"><b>0</b><span>внешних библиотек: сайт быстрый и переносимый</span></div>
+        <div class="stat"><b>100%</b><span>адаптивность под телефон, экран и проектор</span></div>
       </div>
     </section>
 
     <section id="case" class="section shell">
       <div class="section-head reveal">
-        <h2 class="section-title">Почему это важно</h2>
+        <h2 class="section-title">Кейс для школьников</h2>
         <p class="section-text">
-          Чернобыль стал не только трагедией, но и жёстким испытанием инженерной мысли.
-          Роботы показали: аварийная техника должна проектироваться не «в среднем», а под худший сценарий.
+          Чернобыль показывает инженерную мысль в предельной ситуации. Урок строится не вокруг страха,
+          а вокруг вопроса: как спроектировать машину, которая спасает людей, когда обычная техника уже не справляется?
         </p>
       </div>
 
       <div class="grid-3">
-        <article class="card reveal">
-          <div class="metric">01</div>
-          <h3>Опасная среда</h3>
-          <p>Высокая радиация, обломки, пыль, нестабильные конструкции и отсутствие нормальных дорог для техники.</p>
-        </article>
-        <article class="card reveal">
-          <div class="metric">02</div>
-          <h3>Дефицит времени</h3>
-          <p>Технику приходилось адаптировать быстро: задачи менялись быстрее, чем успевали появляться полноценные ТЗ.</p>
-        </article>
-        <article class="card reveal">
-          <div class="metric">03</div>
-          <h3>Цена отказа</h3>
-          <p>Каждый отказ робота означал риск для людей: приходилось заменять технику кратковременной ручной работой.</p>
-        </article>
+        <article class="card reveal"><div class="metric">01</div><h3>Опасная среда</h3><p>Радиация, пыль, завалы, нестабильные конструкции, высокая неопределённость и постоянный риск отказа.</p></article>
+        <article class="card reveal"><div class="metric">02</div><h3>Инженерный компромисс</h3><p>Нужен баланс между защитой, массой, простотой, проходимостью, связью, обзором и скоростью ремонта.</p></article>
+        <article class="card reveal"><div class="metric">03</div><h3>Цена ошибки</h3><p>Если робот отказывает, его место занимает человек. Поэтому UX управления и ремонтопригодность - часть безопасности.</p></article>
+      </div>
+
+      <div class="lesson-path reveal" aria-label="Маршрут урока">
+        <button class="path-step active" type="button"><strong>1. Проблема</strong><span>Почему человек не должен идти в опасную зону.</span></button>
+        <button class="path-step" type="button"><strong>2. Среда</strong><span>Что радиация, пыль и завалы делают с техникой.</span></button>
+        <button class="path-step" type="button"><strong>3. Робот</strong><span>Какие узлы нужны: ходовая, датчики, связь, защита.</span></button>
+        <button class="path-step" type="button"><strong>4. Отказ</strong><span>Почему нужно проектировать не успех, а поведение при поломке.</span></button>
+        <button class="path-step" type="button"><strong>5. Вывод</strong><span>Как этот опыт применить к современным аварийным роботам.</span></button>
       </div>
     </section>
 
     <section id="timeline" class="section shell">
       <div class="section-head reveal">
         <h2 class="section-title">Хронология</h2>
-        <p class="section-text">
-          Логика развития событий: от аварии и первых разведывательных задач до применения специальных машин,
-          роботизированных комплексов и последующих инженерных выводов.
-        </p>
+        <p class="section-text">Нажмите на этап, чтобы открыть пояснение. Так блок удобно использовать как интерактивную историю на занятии.</p>
       </div>
-
       <div class="timeline reveal">
-        <div class="time-item">
-          <div class="time-date">26.04.1986</div>
-          <div><strong>Авария на 4-м энергоблоке</strong><p>Возникает зона, где человеку опасно работать даже короткое время. Нужны дистанционные средства разведки и расчистки.</p></div>
-        </div>
-        <div class="time-item">
-          <div class="time-date">Весна-лето</div>
-          <div><strong>Поиск технических решений</strong><p>Используются отечественные разработки, военная техника, инженерные импровизации и зарубежные специализированные машины.</p></div>
-        </div>
-        <div class="time-item">
-          <div class="time-date">1986</div>
-          <div><strong>МОБОТ, СТР-1, Клин, разведчики</strong><p>Роботы получают задачи: визуальный осмотр, дозиметрия, перемещение фрагментов, расчистка кровли и работа около разрушенного блока.</p></div>
-        </div>
-        <div class="time-item">
-          <div class="time-date">После работ</div>
-          <div><strong>Главный урок</strong><p>Нужна заранее готовая аварийная робототехника: радиационно-стойкая, ремонтопригодная, простая в управлении и рассчитанная на потерю связи.</p></div>
-        </div>
+        <article class="time-item open"><div class="time-date">26.04.1986</div><div><span class="time-title">Авария на 4-м энергоблоке</span><p class="time-short">Появляется зона, где нельзя работать обычными методами.</p><p class="time-more">Нужны дистанционные средства: разведка, дозиметрия, визуальный контроль, расчистка и перемещение опасных фрагментов.</p></div><div class="time-arrow">⌄</div></article>
+        <article class="time-item"><div class="time-date">Весна-лето</div><div><span class="time-title">Поиск технических решений</span><p class="time-short">Инженеры используют всё доступное: специальные роботы, военную технику, адаптацию и импровизацию.</p><p class="time-more">Задачи менялись быстро, поэтому ценились простые машины, которые можно доработать на месте и обслуживать в тяжёлых условиях.</p></div><div class="time-arrow">⌄</div></article>
+        <article class="time-item"><div class="time-date">1986</div><div><span class="time-title">Работа робототехнических комплексов</span><p class="time-short">МОБОТ, СТР-1, Клин, Joker и другие решения пробуются на разных участках.</p><p class="time-more">Одни машины помогали выполнять конкретные операции, другие быстро выходили из строя или оказывались недостаточно приспособленными к объекту.</p></div><div class="time-arrow">⌄</div></article>
+        <article class="time-item"><div class="time-date">После работ</div><div><span class="time-title">Инженерный вывод</span><p class="time-short">Аварийная робототехника должна быть готова заранее.</p><p class="time-more">Нужны испытания, радиационная стойкость, простое управление, запасные модули, документация и подготовленные операторы.</p></div><div class="time-arrow">⌄</div></article>
       </div>
     </section>
 
     <section id="robots" class="section shell">
       <div class="section-head reveal">
         <h2 class="section-title">Роботы и комплексы</h2>
-        <p class="section-text">
-          Нажимайте на вкладки: карточка меняется, а вместе с ней - назначение, сильные стороны и ограничения.
-        </p>
+        <p class="section-text">Выберите машину. Карточка показывает не только описание, но и UX-вывод: что важно для оператора и инженера.</p>
       </div>
 
       <div class="tabs reveal" id="robotTabs" aria-label="Выбор робота"></div>
-
       <div class="robot-panel reveal">
-        <div class="robot-visual">
-          <svg id="robotMini" viewBox="0 0 520 340" width="100%" height="100%" role="img" aria-label="Схема робота"></svg>
-        </div>
+        <div class="robot-visual"><svg id="robotMini" viewBox="0 0 520 340" width="100%" height="100%" role="img" aria-label="Схема робота"></svg></div>
         <div class="card robot-data">
           <h3 id="robotTitle">Робот</h3>
           <p id="robotDescription">Описание появится после загрузки.</p>
           <div class="data-row"><span>Задача</span><b id="robotTask">-</b></div>
           <div class="data-row"><span>Сильная сторона</span><b id="robotPower">-</b></div>
           <div class="data-row"><span>Уязвимость</span><b id="robotWeakness">-</b></div>
-          <div class="data-row"><span>Инженерный вывод</span><b id="robotLesson">-</b></div>
+          <div class="data-row"><span>UX-вывод</span><b id="robotLesson">-</b></div>
         </div>
+      </div>
+
+      <div class="compare-box reveal">
+        <div class="card"><h3>Что помогало роботам</h3><div class="compare-list"><div class="compare-item">Простая механика и понятный рабочий орган.</div><div class="compare-item">Дистанционное управление с минимальной зависимостью от сложной электроники.</div><div class="compare-item">Возможность быстро ремонтировать, менять узлы и адаптировать конструкцию.</div></div></div>
+        <div class="card"><h3>Что мешало роботам</h3><div class="compare-list"><div class="compare-item">Недостаточная радиационная стойкость компонентов.</div><div class="compare-item">Проблемы связи, обзора и ориентации на разрушенном объекте.</div><div class="compare-item">Слабая проходимость там, где поверхность была не похожа на полигон.</div></div></div>
       </div>
     </section>
 
     <section id="engineering" class="section shell">
       <div class="section-head reveal">
-        <h2 class="section-title">Инженерные уроки</h2>
-        <p class="section-text">
-          Этот раздел можно использовать как основу занятия для школьников: что происходит с техникой в экстремальной среде
-          и как инженер думает в аварийной ситуации.
-        </p>
+        <h2 class="section-title">Инженерия выживания</h2>
+        <p class="section-text">Главный образовательный блок: что именно нужно проектировать, если робот работает в среде, где человек рискует жизнью.</p>
       </div>
 
       <div class="grid-2">
-        <div class="lesson reveal">
-          <h3>Что ломается первым</h3>
-          <ul>
-            <li>электроника и элементы управления, если они не рассчитаны на ионизирующее излучение;</li>
-            <li>связь и видеоканал, если нет прямой видимости или появляются помехи;</li>
-            <li>ходовая часть, если робот попадает в завалы, пыль, осколки и неровности;</li>
-            <li>логистика: зарядка, ремонт, доставка, дезактивация, сменные модули.</li>
-          </ul>
-        </div>
-
-        <div class="lesson reveal">
-          <h3>Что должен уметь аварийный робот</h3>
-          <ul>
-            <li>передавать картинку, измерять радиацию и работать без оператора в опасной зоне;</li>
-            <li>иметь простую модульную механику: отвал, захват, датчики, защищённый корпус;</li>
-            <li>быстро ремонтироваться обычной инженерной группой;</li>
-            <li>сохранять управление при частичной потере связи и датчиков.</li>
-          </ul>
-        </div>
+        <div class="lesson reveal"><h3>Что ломается первым</h3><ul><li>электроника и сенсоры при воздействии ионизирующего излучения;</li><li>видеоканал и связь при помехах, экранах и сложной геометрии объекта;</li><li>ходовая часть при движении по обломкам, пыли и неровным поверхностям;</li><li>организация ремонта, зарядки, дезактивации и смены модулей.</li></ul></div>
+        <div class="lesson reveal"><h3>Что должен уметь аварийный робот</h3><ul><li>передавать картинку, измерять обстановку и работать дистанционно;</li><li>иметь защищённый корпус, простую ходовую и сменные рабочие органы;</li><li>оставаться управляемым при частичной потере датчиков;</li><li>быть понятным оператору: меньше лишнего, больше ясных сигналов.</li></ul></div>
       </div>
 
-      <div class="simulator reveal" style="margin-top:16px;">
+      <div class="simulator reveal">
         <div class="range-panel">
           <h3>Мини-симулятор риска</h3>
-          <p class="section-text">Передвиньте ползунок: условная мощность дозы растёт, а допустимое время работы человека быстро падает. Это показывает, зачем нужны роботы.</p>
-          <label for="doseRange">Мощность дозы, Р/ч: <b id="doseLabel">500</b></label>
+          <p class="section-text">Передвигайте ползунок. Чем выше условная мощность дозы, тем быстрее исчезает безопасное окно для человека.</p>
+          <label for="doseRange"><span>Мощность дозы, Р/ч</span><b id="doseLabel">500</b></label>
           <input id="doseRange" type="range" min="50" max="3200" step="50" value="500" />
+          <div class="bars" id="bars" aria-hidden="true"></div>
           <p class="section-text" id="doseComment">Робот ещё может работать как разведчик, но человек должен находиться вне зоны.</p>
         </div>
-        <div class="dose-readout" id="doseReadout">
-          <div>
-            <div class="dose-big" id="safeTime">36</div>
-            <p class="section-text">условных секунд до критически малого безопасного окна</p>
-          </div>
-        </div>
+        <div class="dose-readout" id="doseReadout"><div><div class="dose-big" id="safeTime">36</div><p class="section-text">условных секунд до критически малого безопасного окна</p></div></div>
       </div>
     </section>
 
     <section id="quiz" class="section shell">
       <div class="section-head reveal">
         <h2 class="section-title">Мини-квиз</h2>
-        <p class="section-text">
-          5 вопросов для школьников. После ответа сайт сразу показывает результат.
-        </p>
+        <p class="section-text">Проверка понимания. Подходит для конца урока или самостоятельной работы школьника.</p>
       </div>
-
+      <div class="quiz-top reveal"><button class="btn ghost" id="resetQuiz" type="button">Сбросить ответы</button><div class="quiz-progress" aria-label="Прогресс квиза"><span id="quizProgress"></span></div></div>
       <div class="quiz reveal" id="quizBox"></div>
-      <div class="card reveal" style="margin-top:16px;">
-        <h3>Результат</h3>
-        <p class="result" id="quizResult">Ответьте на вопросы - здесь появится итог.</p>
+      <div class="card reveal" style="margin-top:16px;"><h3>Результат</h3><p class="result" id="quizResult">Ответьте на вопросы - здесь появится итог.</p></div>
+    </section>
+
+    <section id="glossary" class="section shell">
+      <div class="section-head reveal">
+        <h2 class="section-title">Словарь</h2>
+        <p class="section-text">Короткие пояснения терминов, чтобы школьник не терялся в инженерной теме.</p>
+      </div>
+      <div class="grid-2 reveal">
+        <details open><summary>Дозиметрия</summary><p>Измерение радиационной обстановки. Для робота это одна из главных задач разведки.</p></details>
+        <details><summary>Радиационная стойкость</summary><p>Способность электроники, материалов и узлов сохранять работоспособность под действием излучения.</p></details>
+        <details><summary>Дистанционное управление</summary><p>Управление машиной оператором из безопасного места по кабелю, радиоканалу или другому каналу связи.</p></details>
+        <details><summary>Рабочий орган</summary><p>Инструмент робота: отвал, захват, манипулятор, камера, датчик или другое устройство для выполнения задачи.</p></details>
       </div>
     </section>
 
     <section id="sources" class="section shell">
       <div class="section-head reveal">
-        <h2 class="section-title">Источники и проверка</h2>
-        <p class="section-text">
-          Сайт сделан как учебный материал, а не как закрытый архивный отчёт. Исторические формулировки лучше сверять
-          с первичными документами и публикациями профильных организаций.
-        </p>
+        <h2 class="section-title">Источники</h2>
+        <p class="section-text">Сайт сделан как образовательная интерактивная версия. Для публикации и научного текста исторические детали нужно сверять с первичными источниками.</p>
       </div>
-
       <div class="source-list reveal">
-        <a class="source" href="https://www.iaea.org/sites/default/files/chernobyl.pdf" target="_blank" rel="noreferrer">
-          <code>IAEA</code>
-          <span>Chernobyl's Legacy: Health, Environmental and Socio-Economic Impacts - обзор последствий аварии.</span>
-        </a>
-        <a class="source" href="https://www-pub.iaea.org/MTCD/Publications/PDF/Pub913e_web.pdf" target="_blank" rel="noreferrer">
-          <code>INSAG-7</code>
-          <span>The Chernobyl Accident: Updating of INSAG-1 - международный разбор причин и организационных уроков.</span>
-        </a>
-        <a class="source" href="https://ru.wikipedia.org/wiki/%D0%A1%D0%A2%D0%A0-1" target="_blank" rel="noreferrer">
-          <code>СТР-1</code>
-          <span>Справочная статья о специализированном транспортном роботе СТР-1 и его применении.</span>
-        </a>
-        <a class="source" href="https://www.atomic-energy.ru/articles/2015/03/21/55774" target="_blank" rel="noreferrer">
-          <code>Atomic Energy 2.0</code>
-          <span>Обзор роботов, применявшихся при ликвидации последствий аварии.</span>
-        </a>
+        <a class="source" href="https://www.iaea.org/sites/default/files/chernobyl.pdf" target="_blank" rel="noreferrer"><code>IAEA</code><span>Chernobyl's Legacy: Health, Environmental and Socio-Economic Impacts - обзор последствий аварии.</span></a>
+        <a class="source" href="https://www-pub.iaea.org/MTCD/Publications/PDF/Pub913e_web.pdf" target="_blank" rel="noreferrer"><code>INSAG-7</code><span>The Chernobyl Accident: Updating of INSAG-1 - международный разбор причин и организационных уроков.</span></a>
+        <a class="source" href="https://ru.wikipedia.org/wiki/%D0%A1%D0%A2%D0%A0-1" target="_blank" rel="noreferrer"><code>СТР-1</code><span>Справочная статья о специализированном транспортном роботе СТР-1 и его применении.</span></a>
+        <a class="source" href="https://www.atomic-energy.ru/articles/2015/03/21/55774" target="_blank" rel="noreferrer"><code>Atomic Energy 2.0</code><span>Обзор роботов, применявшихся при ликвидации последствий аварии.</span></a>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="shell">
-      <p>
-        Интерактивный сайт подготовлен для образовательного проекта о робототехнике Чернобыля.
-        Можно использовать как основу урока, комикса, презентации или музейного стенда.
-      </p>
+  <footer class="footer"><div class="shell"><p>Интерактивный сайт подготовлен для образовательного проекта о робототехнике Чернобыля. Его можно использовать как основу урока, комикса, презентации или музейного стенда.</p></div></footer>
+
+  <button class="icon-btn floating-top" id="topBtn" type="button" aria-label="Наверх">↑</button>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <div class="search-modal" id="searchModal" role="dialog" aria-modal="true" aria-label="Поиск по сайту">
+    <div class="search-box">
+      <input id="searchInput" type="search" placeholder="Найти раздел: робот, радиация, квиз, источники..." />
+      <div class="search-results" id="searchResults"></div>
     </div>
-  </footer>
+  </div>
 
   <script>
     /*
-      Ниже - JavaScript.
-      Он отвечает за: появление блоков при прокрутке, переключение роботов, симулятор риска и квиз.
+      UX-логика сайта:
+      - активная навигация и прогресс чтения;
+      - мобильное меню;
+      - тёмная/светлая тема;
+      - поиск по разделам;
+      - карточки роботов;
+      - симулятор риска;
+      - квиз с прогрессом;
+      - режим урока.
     */
 
-    const robotData = [
-      {
-        id: "mobot",
-        title: "МОБОТ-Ч-ХВ / МОБОТ-Ч-ХВ-2",
-        description: "Мобильный робототехнический комплекс, связанный с инженерной школой МВТУ - МГТУ им. Н. Э. Баумана и СКТБ ПР. В учебном кейсе он показывает важность модульности, дистанционного управления и ремонтопригодности.",
-        task: "Разведка, наблюдение, работа в опасной зоне",
-        power: "Модульность и инженерная адаптация",
-        weakness: "Сложная среда: радиация, связь, завалы",
-        lesson: "Робот должен быть простым, ремонтным и готовым к нестандартной задаче",
-        type: "crawler"
-      },
-      {
-        id: "str",
-        title: "СТР-1",
-        description: "Специализированный транспортный робот для расчистки и дезактивации. Его логика близка к мини-бульдозеру: защищённая платформа, отвал, дистанционное управление, движение по сложной поверхности.",
-        task: "Расчистка кровли и перемещение радиоактивных фрагментов",
-        power: "Мощная ходовая часть и рабочий орган",
-        weakness: "Ограничения связи, проходимости и обзора",
-        lesson: "Для аварий нужен не красивый робот, а рабочая машина с понятной задачей",
-        type: "dozer"
-      },
-      {
-        id: "joker",
-        title: "MF-2 / MF-3 Joker",
-        description: "Зарубежные специализированные машины, закупленные для работ в зоне аварии. Их опыт часто приводят как пример того, что техника, успешная в лаборатории, может не выдержать реальную радиационную и организационную нагрузку.",
-        task: "Попытка механизированной очистки высокоактивных участков",
-        power: "Готовая специализированная платформа",
-        weakness: "Недостаточная устойчивость к реальным условиям объекта",
-        lesson: "Нельзя оценивать робота без испытаний в максимально близкой среде",
-        type: "compact"
-      },
-      {
-        id: "klin",
-        title: "Клин-1 / Клин-2",
-        description: "Роботизированные комплексы на базе тяжёлой техники. Важный пример: иногда аварийный робот - это не маленький андроид, а дистанционно управляемая инженерная машина.",
-        task: "Тяжёлые работы, расчистка, операции около разрушенного блока",
-        power: "Защита, масса, тяга и рабочее оборудование",
-        weakness: "Габариты, сложная доставка и обслуживание",
-        lesson: "Масштаб робота выбирается задачей, а не эффектной картинкой",
-        type: "heavy"
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    const toast = $('#toast');
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    const progressBar = $('#progressBar');
+    const topBtn = $('#topBtn');
+    const navLinks = $$('.nav-link');
+    const sections = navLinks.map(link => $(link.getAttribute('href'))).filter(Boolean);
+
+    function updateScrollUX() {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      progressBar.style.width = `${Math.min(100, (scrollTop / docHeight) * 100)}%`;
+      topBtn.classList.toggle('show', scrollTop > 700);
+
+      let current = sections[0]?.id;
+      sections.forEach(section => {
+        if (section.getBoundingClientRect().top <= 120) current = section.id;
+      });
+      navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === `#${current}`));
+    }
+
+    window.addEventListener('scroll', updateScrollUX, { passive: true });
+    topBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+    updateScrollUX();
+
+    const menuBtn = $('#menuBtn');
+    const navLinksWrap = $('#navLinks');
+    menuBtn.addEventListener('click', () => navLinksWrap.classList.toggle('open'));
+    navLinks.forEach(link => link.addEventListener('click', () => navLinksWrap.classList.remove('open')));
+
+    const themeBtn = $('#themeBtn');
+    const savedTheme = localStorage.getItem('chernobyl-theme');
+    if (savedTheme) document.documentElement.dataset.theme = savedTheme;
+    themeBtn.addEventListener('click', () => {
+      const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = next;
+      localStorage.setItem('chernobyl-theme', next);
+      showToast(next === 'dark' ? 'Включена тёмная тема' : 'Включена светлая тема');
+    });
+
+    $('#copyLinkBtn').addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        showToast('Ссылка скопирована');
+      } catch {
+        showToast('Не удалось скопировать ссылку');
       }
+    });
+
+    $('#lessonModeBtn').addEventListener('click', () => {
+      document.body.classList.toggle('lesson-mode');
+      const enabled = document.body.classList.contains('lesson-mode');
+      $('#lessonModeBtn').textContent = enabled ? 'Показать всё' : 'Режим урока';
+      showToast(enabled ? 'Режим урока включён' : 'Показаны все разделы');
+    });
+
+    const searchModal = $('#searchModal');
+    const searchBtn = $('#searchBtn');
+    const searchInput = $('#searchInput');
+    const searchResults = $('#searchResults');
+    const searchItems = [
+      { title: 'Кейс для школьников', text: 'проблема среда маршрут урока', href: '#case' },
+      { title: 'Хронология', text: 'авария 1986 этапы история', href: '#timeline' },
+      { title: 'Роботы и комплексы', text: 'мобот стр-1 клин joker техника', href: '#robots' },
+      { title: 'Инженерия выживания', text: 'радиация отказ связь механика симулятор', href: '#engineering' },
+      { title: 'Мини-квиз', text: 'проверка вопросы тест', href: '#quiz' },
+      { title: 'Словарь', text: 'дозиметрия радиационная стойкость рабочий орган', href: '#glossary' },
+      { title: 'Источники', text: 'iaea insag atomic energy ссылки', href: '#sources' }
     ];
 
-    const tabs = document.getElementById("robotTabs");
-    const robotMini = document.getElementById("robotMini");
+    function openSearch() {
+      searchModal.classList.add('open');
+      searchInput.value = '';
+      renderSearch('');
+      setTimeout(() => searchInput.focus(), 30);
+    }
+
+    function closeSearch() { searchModal.classList.remove('open'); }
+    searchBtn.addEventListener('click', openSearch);
+    searchModal.addEventListener('click', event => { if (event.target === searchModal) closeSearch(); });
+    document.addEventListener('keydown', event => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); openSearch(); }
+      if (event.key === 'Escape') closeSearch();
+    });
+
+    function renderSearch(query) {
+      const q = query.trim().toLowerCase();
+      const results = searchItems.filter(item => !q || `${item.title} ${item.text}`.toLowerCase().includes(q));
+      searchResults.innerHTML = results.map(item => `<div class="search-result" data-href="${item.href}"><b>${item.title}</b><span>${item.text}</span></div>`).join('');
+      $$('.search-result', searchResults).forEach(row => row.addEventListener('click', () => {
+        closeSearch();
+        location.hash = row.dataset.href;
+      }));
+    }
+    searchInput.addEventListener('input', () => renderSearch(searchInput.value));
+
+    $$('.path-step').forEach(step => step.addEventListener('click', () => {
+      $$('.path-step').forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+    }));
+
+    $$('.time-item').forEach(item => item.addEventListener('click', () => item.classList.toggle('open')));
+
+    const robotData = [
+      { title: 'МОБОТ-Ч-ХВ', description: 'Мобильный робототехнический комплекс инженерной школы МВТУ - МГТУ им. Н. Э. Баумана и СКТБ ПР. В учебном кейсе показывает важность модульности и ремонтопригодности.', task: 'Разведка, наблюдение, работа в опасной зоне', power: 'Модульность и адаптация', weakness: 'Радиация, связь, завалы', lesson: 'Интерфейс оператора должен помогать быстро понять состояние машины', type: 'crawler' },
+      { title: 'СТР-1', description: 'Специализированный транспортный робот для расчистки и дезактивации. По логике это дистанционная инженерная машина с отвалом и защищённой платформой.', task: 'Расчистка кровли и перемещение фрагментов', power: 'Ходовая часть и рабочий орган', weakness: 'Обзор, связь, проходимость', lesson: 'Чем проще задача на экране оператора, тем выше шанс выполнить работу', type: 'dozer' },
+      { title: 'MF-2 / MF-3 Joker', description: 'Зарубежные специализированные машины. Их опыт показывает: техника, успешная на полигоне, может не выдержать реальную радиационную и организационную нагрузку.', task: 'Очистка высокоактивных участков', power: 'Готовая специализированная платформа', weakness: 'Недостаточная стойкость к реальному объекту', lesson: 'UX начинается до аварии: с испытаний, документации и подготовки оператора', type: 'compact' },
+      { title: 'Клин-1 / Клин-2', description: 'Роботизированные комплексы на базе тяжёлой техники. Иногда аварийный робот - это не маленькая машина, а дистанционно управляемый инженерный комплекс.', task: 'Тяжёлые работы около разрушенного блока', power: 'Масса, тяга, защита', weakness: 'Габариты и сложное обслуживание', lesson: 'Масштаб интерфейса и машины выбирается задачей, а не эффектностью', type: 'heavy' }
+    ];
+
+    const tabs = $('#robotTabs');
+    const robotMini = $('#robotMini');
+    robotData.forEach((robot, index) => {
+      const button = document.createElement('button');
+      button.className = 'tab';
+      button.type = 'button';
+      button.textContent = robot.title;
+      button.addEventListener('click', () => selectRobot(index));
+      tabs.appendChild(button);
+    });
 
     function drawRobot(type) {
-      // Простые SVG-схемы разных типов машин. Цвета заданы через текущую палитру сайта.
-      const commonDefs = `
-        <defs>
-          <linearGradient id="g1" x1="0" x2="1">
-            <stop offset="0" stop-color="#e9f0ff"/><stop offset="1" stop-color="#8fa0bc"/>
-          </linearGradient>
-          <filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        </defs>
-        <ellipse cx="260" cy="300" rx="190" ry="22" fill="rgba(0,0,0,.35)"/>
-      `;
-
-      const wheels = `
-        <g fill="#111827">
-          <circle cx="150" cy="260" r="31"/><circle cx="220" cy="268" r="36"/><circle cx="300" cy="268" r="36"/><circle cx="370" cy="260" r="31"/>
-        </g>
-        <g fill="#64748b">
-          <circle cx="150" cy="260" r="13"/><circle cx="220" cy="268" r="15"/><circle cx="300" cy="268" r="15"/><circle cx="370" cy="260" r="13"/>
-        </g>`;
-
-      if (type === "dozer") {
-        robotMini.innerHTML = commonDefs + `
-          <path d="M90 220 C110 170 405 170 430 220 L410 288 C355 310 160 310 105 288 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/>
-          ${wheels}
-          <rect x="125" y="125" width="235" height="105" rx="28" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/>
-          <path d="M350 210 L475 230 L475 270 L372 258 Z" fill="#b8c4d8" stroke="rgba(255,255,255,.35)" stroke-width="5"/>
-          <circle cx="315" cy="150" r="16" fill="#38e6c5" filter="url(#glow)"/>
-        `;
-      } else if (type === "heavy") {
-        robotMini.innerHTML = commonDefs + `
-          <path d="M70 218 C95 160 430 160 460 218 L436 292 C370 315 145 315 86 292 Z" fill="#101827" stroke="#556070" stroke-width="6"/>
-          ${wheels}
-          <rect x="115" y="105" width="300" height="130" rx="24" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/>
-          <rect x="175" y="70" width="145" height="58" rx="18" fill="#dbe7f8"/>
-          <path d="M320 102 L430 72" stroke="#ffd166" stroke-width="10" stroke-linecap="round"/>
-          <circle cx="437" cy="70" r="14" fill="#ffd166"/>
-        `;
-      } else if (type === "compact") {
-        robotMini.innerHTML = commonDefs + `
-          <path d="M120 220 C140 180 380 180 400 220 L383 280 C330 302 180 302 132 280 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/>
-          <g fill="#111827"><circle cx="175" cy="260" r="34"/><circle cx="260" cy="268" r="39"/><circle cx="345" cy="260" r="34"/></g>
-          <g fill="#64748b"><circle cx="175" cy="260" r="14"/><circle cx="260" cy="268" r="16"/><circle cx="345" cy="260" r="14"/></g>
-          <rect x="160" y="130" width="200" height="92" rx="28" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/>
-          <rect x="230" y="92" width="76" height="50" rx="16" fill="#dbe7f8"/>
-          <circle cx="290" cy="118" r="12" fill="#38e6c5" filter="url(#glow)"/>
-        `;
-      } else {
-        robotMini.innerHTML = commonDefs + `
-          <path d="M95 220 C120 170 410 170 435 220 L412 290 C355 310 165 310 108 290 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/>
-          ${wheels}
-          <rect x="135" y="128" width="240" height="100" rx="26" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/>
-          <rect x="285" y="88" width="85" height="55" rx="18" fill="#dbe7f8"/>
-          <circle cx="345" cy="116" r="13" fill="#38e6c5" filter="url(#glow)"/>
-          <path d="M320 88 C324 45 373 48 384 82" fill="none" stroke="#ffd166" stroke-width="6" stroke-linecap="round"/>
-        `;
-      }
+      const defs = `<defs><linearGradient id="g1" x1="0" x2="1"><stop offset="0" stop-color="#eef4ff"/><stop offset="1" stop-color="#8fa0bc"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><ellipse cx="260" cy="300" rx="190" ry="22" fill="rgba(0,0,0,.35)"/>`;
+      const wheels = `<g fill="#111827"><circle cx="150" cy="260" r="31"/><circle cx="220" cy="268" r="36"/><circle cx="300" cy="268" r="36"/><circle cx="370" cy="260" r="31"/></g><g fill="#64748b"><circle cx="150" cy="260" r="13"/><circle cx="220" cy="268" r="15"/><circle cx="300" cy="268" r="15"/><circle cx="370" cy="260" r="13"/></g>`;
+      if (type === 'dozer') robotMini.innerHTML = defs + `<path d="M90 220 C110 170 405 170 430 220 L410 288 C355 310 160 310 105 288 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/>${wheels}<rect x="125" y="125" width="235" height="105" rx="28" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/><path d="M350 210 L475 230 L475 270 L372 258 Z" fill="#b8c4d8" stroke="rgba(255,255,255,.35)" stroke-width="5"/><circle cx="315" cy="150" r="16" fill="#38e6c5" filter="url(#glow)"/>`;
+      else if (type === 'heavy') robotMini.innerHTML = defs + `<path d="M70 218 C95 160 430 160 460 218 L436 292 C370 315 145 315 86 292 Z" fill="#101827" stroke="#556070" stroke-width="6"/>${wheels}<rect x="115" y="105" width="300" height="130" rx="24" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/><rect x="175" y="70" width="145" height="58" rx="18" fill="#dbe7f8"/><path d="M320 102 L430 72" stroke="#ffd166" stroke-width="10" stroke-linecap="round"/><circle cx="437" cy="70" r="14" fill="#ffd166"/>`;
+      else if (type === 'compact') robotMini.innerHTML = defs + `<path d="M120 220 C140 180 380 180 400 220 L383 280 C330 302 180 302 132 280 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/><g fill="#111827"><circle cx="175" cy="260" r="34"/><circle cx="260" cy="268" r="39"/><circle cx="345" cy="260" r="34"/></g><g fill="#64748b"><circle cx="175" cy="260" r="14"/><circle cx="260" cy="268" r="16"/><circle cx="345" cy="260" r="14"/></g><rect x="160" y="130" width="200" height="92" rx="28" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/><rect x="230" y="92" width="76" height="50" rx="16" fill="#dbe7f8"/><circle cx="290" cy="118" r="12" fill="#38e6c5" filter="url(#glow)"/>`;
+      else robotMini.innerHTML = defs + `<path d="M95 220 C120 170 410 170 435 220 L412 290 C355 310 165 310 108 290 Z" fill="#111827" stroke="#4b5563" stroke-width="5"/>${wheels}<rect x="135" y="128" width="240" height="100" rx="26" fill="url(#g1)" stroke="rgba(255,255,255,.45)" stroke-width="4"/><rect x="285" y="88" width="85" height="55" rx="18" fill="#dbe7f8"/><circle cx="345" cy="116" r="13" fill="#38e6c5" filter="url(#glow)"/><path d="M320 88 C324 45 373 48 384 82" fill="none" stroke="#ffd166" stroke-width="6" stroke-linecap="round"/>`;
     }
 
     function selectRobot(index) {
       const item = robotData[index];
-      document.querySelectorAll(".tab").forEach((tab, tabIndex) => {
-        tab.classList.toggle("active", tabIndex === index);
-      });
-      document.getElementById("robotTitle").textContent = item.title;
-      document.getElementById("robotDescription").textContent = item.description;
-      document.getElementById("robotTask").textContent = item.task;
-      document.getElementById("robotPower").textContent = item.power;
-      document.getElementById("robotWeakness").textContent = item.weakness;
-      document.getElementById("robotLesson").textContent = item.lesson;
+      $$('.tab').forEach((tab, i) => tab.classList.toggle('active', i === index));
+      $('#robotTitle').textContent = item.title;
+      $('#robotDescription').textContent = item.description;
+      $('#robotTask').textContent = item.task;
+      $('#robotPower').textContent = item.power;
+      $('#robotWeakness').textContent = item.weakness;
+      $('#robotLesson').textContent = item.lesson;
       drawRobot(item.type);
     }
-
-    robotData.forEach((robot, index) => {
-      const button = document.createElement("button");
-      button.className = "tab";
-      button.textContent = robot.title.split(" / ")[0];
-      button.addEventListener("click", () => selectRobot(index));
-      tabs.appendChild(button);
-    });
-
     selectRobot(0);
 
-    // Симулятор: чем выше мощность дозы, тем меньше условное допустимое окно для человека.
-    const doseRange = document.getElementById("doseRange");
-    const doseLabel = document.getElementById("doseLabel");
-    const safeTime = document.getElementById("safeTime");
-    const doseComment = document.getElementById("doseComment");
-    const doseReadout = document.getElementById("doseReadout");
+    const doseRange = $('#doseRange');
+    const doseLabel = $('#doseLabel');
+    const safeTime = $('#safeTime');
+    const doseComment = $('#doseComment');
+    const doseReadout = $('#doseReadout');
+    const bars = $('#bars');
+    bars.innerHTML = Array.from({ length: 12 }, (_, i) => `<span class="bar" style="height:${18 + i * 5}px"></span>`).join('');
 
     function updateDose() {
       const dose = Number(doseRange.value);
       const seconds = Math.max(4, Math.round(18000 / dose));
       doseLabel.textContent = dose;
       safeTime.textContent = seconds;
-      const glow = Math.min(0.42, dose / 7000);
-      doseReadout.style.setProperty("--glow", glow.toFixed(2));
-
-      if (dose < 500) {
-        doseComment.textContent = "Риск высокий, но техника ещё может выполнять длительную разведку.";
-      } else if (dose < 1600) {
-        doseComment.textContent = "Человеческая работа становится крайне ограниченной. Нужны дистанционные платформы.";
-      } else {
-        doseComment.textContent = "Это зона, где робот фактически становится расходуемым защитником человека.";
-      }
+      doseReadout.style.setProperty('--glow', Math.min(.44, dose / 7000).toFixed(2));
+      $$('.bar', bars).forEach((bar, index) => { bar.style.opacity = index < dose / 270 ? '.95' : '.25'; });
+      if (dose < 500) doseComment.textContent = 'Риск высокий, но техника ещё может выполнять длительную разведку.';
+      else if (dose < 1600) doseComment.textContent = 'Человеческая работа становится крайне ограниченной. Нужны дистанционные платформы.';
+      else doseComment.textContent = 'Это зона, где робот фактически становится расходуемым защитником человека.';
     }
-
-    doseRange.addEventListener("input", updateDose);
+    doseRange.addEventListener('input', updateDose);
     updateDose();
 
-    // Квиз: правильный вариант подсвечивается, итог считается автоматически.
     const questions = [
-      {
-        text: "Зачем в зоне аварии нужны роботы?",
-        answers: ["Чтобы заменить людей в опасной среде", "Чтобы ускорить экскурсии", "Чтобы украсить площадку"],
-        correct: 0
-      },
-      {
-        text: "Что особенно опасно для электроники робота?",
-        answers: ["Цвет корпуса", "Ионизирующее излучение и помехи", "Слишком ровный пол"],
-        correct: 1
-      },
-      {
-        text: "Почему маленький робот не всегда лучше тяжёлой машины?",
-        answers: ["Может не хватить тяги и устойчивости", "Он всегда дороже", "Он не умеет ездить прямо"],
-        correct: 0
-      },
-      {
-        text: "Какой главный принцип аварийного робота?",
-        answers: ["Максимум декоративных деталей", "Простота, ремонтопригодность, защищённость", "Только автономность без оператора"],
-        correct: 1
-      },
-      {
-        text: "Чему учит опыт Чернобыля?",
-        answers: ["Роботов можно готовить после аварии", "Нужны заранее подготовленные аварийные комплексы", "Роботы нужны только в космосе"],
-        correct: 1
-      }
+      { text: 'Зачем в зоне аварии нужны роботы?', answers: ['Чтобы заменить людей в опасной среде', 'Чтобы ускорить экскурсии', 'Чтобы украсить площадку'], correct: 0 },
+      { text: 'Что особенно опасно для электроники робота?', answers: ['Цвет корпуса', 'Ионизирующее излучение и помехи', 'Слишком ровный пол'], correct: 1 },
+      { text: 'Почему маленький робот не всегда лучше тяжёлой машины?', answers: ['Может не хватить тяги и устойчивости', 'Он всегда дороже', 'Он не умеет ездить прямо'], correct: 0 },
+      { text: 'Какой главный принцип аварийного робота?', answers: ['Максимум декоративных деталей', 'Простота, ремонтопригодность, защищённость', 'Только автономность без оператора'], correct: 1 },
+      { text: 'Чему учит опыт Чернобыля?', answers: ['Роботов можно готовить после аварии', 'Нужны заранее подготовленные аварийные комплексы', 'Роботы нужны только в космосе'], correct: 1 }
     ];
 
-    const quizBox = document.getElementById("quizBox");
-    const quizResult = document.getElementById("quizResult");
-    const userAnswers = new Array(questions.length).fill(null);
+    const quizBox = $('#quizBox');
+    const quizResult = $('#quizResult');
+    const quizProgress = $('#quizProgress');
+    let userAnswers = new Array(questions.length).fill(null);
 
     function renderQuiz() {
+      quizBox.innerHTML = '';
       questions.forEach((q, qIndex) => {
-        const block = document.createElement("div");
-        block.className = "question";
+        const block = document.createElement('div');
+        block.className = 'question';
         block.innerHTML = `<strong>${qIndex + 1}. ${q.text}</strong>`;
-
-        const answers = document.createElement("div");
-        answers.className = "answers";
-
+        const answers = document.createElement('div');
+        answers.className = 'answers';
         q.answers.forEach((answer, aIndex) => {
-          const button = document.createElement("button");
-          button.className = "answer";
+          const button = document.createElement('button');
+          button.className = 'answer';
+          button.type = 'button';
           button.textContent = answer;
-          button.addEventListener("click", () => {
+          button.addEventListener('click', () => {
             userAnswers[qIndex] = aIndex;
             [...answers.children].forEach((child, childIndex) => {
-              child.classList.remove("correct", "wrong");
-              if (childIndex === q.correct) child.classList.add("correct");
-              if (childIndex === aIndex && aIndex !== q.correct) child.classList.add("wrong");
+              child.classList.remove('correct', 'wrong');
+              if (childIndex === q.correct) child.classList.add('correct');
+              if (childIndex === aIndex && aIndex !== q.correct) child.classList.add('wrong');
             });
             updateQuizResult();
           });
           answers.appendChild(button);
         });
-
         block.appendChild(answers);
         quizBox.appendChild(block);
       });
+      updateQuizResult();
     }
 
     function updateQuizResult() {
       const answered = userAnswers.filter(v => v !== null).length;
       const score = userAnswers.reduce((sum, answer, index) => sum + (answer === questions[index].correct ? 1 : 0), 0);
+      quizProgress.style.width = `${(answered / questions.length) * 100}%`;
       quizResult.textContent = `Ответов: ${answered}/${questions.length}. Правильно: ${score}/${questions.length}.`;
-      if (answered === questions.length && score === questions.length) {
-        quizResult.textContent += " Отлично: можно переходить к проектированию своего аварийного робота.";
-      }
+      if (answered === questions.length && score === questions.length) quizResult.textContent += ' Отлично: можно переходить к проектированию своего аварийного робота.';
     }
 
+    $('#resetQuiz').addEventListener('click', () => {
+      userAnswers = new Array(questions.length).fill(null);
+      renderQuiz();
+      showToast('Квиз сброшен');
+    });
     renderQuiz();
 
-    // Плавное появление блоков при прокрутке.
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) entry.target.classList.add("visible");
-      });
-    }, { threshold: 0.12 });
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+    }, { threshold: .12 });
+    $$('.reveal').forEach(el => observer.observe(el));
 
-    document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
-
-    // Небольшая анимация числа в верхней карточке.
-    const heroDose = document.getElementById("heroDose");
+    const heroDose = $('#heroDose');
     let pulse = 0;
     setInterval(() => {
       pulse = (pulse + 1) % 3;
