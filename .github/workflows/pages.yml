@@ -1,0 +1,43 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # Берем файлы репозитория
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Настраиваем GitHub Pages
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # Загружаем весь корень репозитория как статический сайт
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      # Публикуем сайт
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
