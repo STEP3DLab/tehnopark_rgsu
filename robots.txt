@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://step3dlab.github.io/tehnopark_rgsu/sitemap.xml
